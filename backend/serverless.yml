@@ -1,0 +1,64 @@
+service:
+  name: capstone
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  environment:
+    DIARY_TABLE: SERVERLESS-DIARY-${self:provider.stage}
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-northeast-2'}
+
+functions:
+  # Auth:
+  #   handler: src/lambda/auth/auth0Authorizer.handler
+
+  GetDiary:
+    handler: src/lambda/http/getDiaries.handler
+    events:
+      - http:
+          method: get
+          path: diaries
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
+
+  CreateDiary:
+    handler: src/lambda/http/createDiary.handler
+    events:
+      - http:
+          method: post
+          path: diaries
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
+
+resources:
+  Resources:
+    DiaryDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: diaryId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: diaryId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DIARY_TABLE}
