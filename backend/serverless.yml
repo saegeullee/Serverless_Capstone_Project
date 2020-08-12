@@ -16,6 +16,8 @@ provider:
 
   environment:
     DIARY_TABLE: SERVERLESS-DIARY-${self:provider.stage}
+    IMAGES_S3_BUCKET: diary-image-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-2'}
 
@@ -28,7 +30,7 @@ functions:
     events:
       - http:
           method: get
-          path: diaries
+          path: diary
           cors: true
     iamRoleStatements:
       - Effect: Allow
@@ -41,13 +43,21 @@ functions:
     events:
       - http:
           method: post
-          path: diaries
+          path: diary
           cors: true
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
+
+  UploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: get
+          path: diary/image
+          cors: true
 
 resources:
   Resources:
@@ -62,3 +72,37 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.DIARY_TABLE}
+
+    DiaryImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: MyPolicy
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadWriteBucketPolicy
+              Effect: Allow
+              Principal: '*'
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: 'arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*'
+        Bucket: !Ref DiaryImagesBucket
