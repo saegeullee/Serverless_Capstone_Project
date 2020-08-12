@@ -48,6 +48,10 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
     this.props.history.push(`/diaries/${diaryId}/edit`)
   }
 
+  onNewDiaryButtonClick = () => {
+    this.props.history.push(`/newDiary`)
+  }
+
   onDiaryCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const newDiary = await createDiary(this.props.auth.getIdToken(), {
@@ -79,7 +83,13 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
       const diaries = [
         {
           diaryId: 'test',
-          createdAt: 'test',
+          createdAt: '2020-08-10',
+          content: 'test',
+          attachmentUrl: 'test'
+        },
+        {
+          diaryId: 'test',
+          createdAt: '2020-08-10',
           content: 'test',
           attachmentUrl: 'test'
         }
@@ -97,7 +107,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   render() {
     return (
       <div>
-        <Header as="h1">TODOs</Header>
+        <Header as="h1">Today's Diary</Header>
 
         {this.renderCreateDiaryInput()}
 
@@ -109,21 +119,25 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   renderCreateDiaryInput() {
     return (
       <Grid.Row>
-        <Grid.Column width={16}>
-          <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'New task',
-              onClick: this.onDiaryCreate
-            }}
-            fluid
-            actionPosition="left"
-            placeholder="To change the world..."
-            onChange={this.handleNameChange}
-          />
-        </Grid.Column>
+        <Button
+          icon="add"
+          color="blue"
+          content="New Diary"
+          onClick={() => this.onNewDiaryButtonClick()}
+        ></Button>
+        {/* <Input
+          action={{
+            color: 'teal',
+            labelPosition: 'left',
+            icon: 'add',
+            content: 'New task',
+            onClick: this.onDiaryCreate
+          }}
+          fluid
+          actionPosition="left"
+          placeholder=""
+          onChange={this.handleNameChange}
+        /> */}
         <Grid.Column width={16}>
           <Divider />
         </Grid.Column>
@@ -165,7 +179,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
                 {diary.content}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {'dummy text'}
+                {diary.createdAt}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button

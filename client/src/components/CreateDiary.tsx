@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Form, Button } from 'semantic-ui-react'
+import { Form, Button, TextArea } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
 import { getUploadUrl, uploadFile } from '../api/diary-api'
 
@@ -75,7 +75,7 @@ export class EditTodo extends React.PureComponent<
   render() {
     return (
       <div>
-        <h1>Upload new image</h1>
+        <h1>Create New Diary</h1>
 
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
@@ -87,6 +87,11 @@ export class EditTodo extends React.PureComponent<
               onChange={this.handleFileChange}
             />
           </Form.Field>
+          <Form.Field
+            control={TextArea}
+            label="Content"
+            style={{ minHeight: 300 }}
+          />
 
           {this.renderButton()}
         </Form>

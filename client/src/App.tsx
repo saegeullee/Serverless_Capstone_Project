@@ -3,7 +3,7 @@ import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
-import { EditTodo } from './components/EditTodo'
+import { EditTodo } from './components/CreateDiary'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import { Diaries } from './components/Diaries'
@@ -80,9 +80,9 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   generateCurrentPage() {
-    if (!this.props.auth.isAuthenticated()) {
-      return <LogIn auth={this.props.auth} />
-    }
+    // if (!this.props.auth.isAuthenticated()) {
+    //   return <LogIn auth={this.props.auth} />
+    // }
 
     return (
       <Switch>
@@ -91,6 +91,14 @@ export default class App extends Component<AppProps, AppState> {
           exact
           render={props => {
             return <Diaries {...props} auth={this.props.auth} />
+          }}
+        />
+
+        <Route
+          path="/newDiary"
+          exact
+          render={props => {
+            return <EditTodo {...props} auth={this.props.auth} />
           }}
         />
 
