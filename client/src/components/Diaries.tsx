@@ -40,10 +40,6 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
     loadingDiaries: true
   }
 
-  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newDiaryName: event.target.value })
-  }
-
   onEditButtonClick = (diaryId: string) => {
     this.props.history.push(`/diaries/${diaryId}/edit`)
   }
@@ -54,7 +50,8 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
 
   onDiaryCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      const newDiary = await createDiary(this.props.auth.getIdToken(), {
+      // const newDiary = await createDiary(this.props.auth.getIdToken(), {
+      const newDiary = await createDiary({
         content: this.state.newDiaryName
       })
       this.setState({
@@ -80,20 +77,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   async componentDidMount() {
     try {
       // const diaries = await getDiaries(this.props.auth.getIdToken())
-      const diaries = [
-        {
-          diaryId: 'test',
-          createdAt: '2020-08-10',
-          content: 'test',
-          attachmentUrl: 'test'
-        },
-        {
-          diaryId: 'test',
-          createdAt: '2020-08-10',
-          content: 'test',
-          attachmentUrl: 'test'
-        }
-      ]
+      const diaries = await getDiaries()
 
       this.setState({
         diaries,
@@ -125,19 +109,6 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
           content="New Diary"
           onClick={() => this.onNewDiaryButtonClick()}
         ></Button>
-        {/* <Input
-          action={{
-            color: 'teal',
-            labelPosition: 'left',
-            icon: 'add',
-            content: 'New task',
-            onClick: this.onDiaryCreate
-          }}
-          fluid
-          actionPosition="left"
-          placeholder=""
-          onChange={this.handleNameChange}
-        /> */}
         <Grid.Column width={16}>
           <Divider />
         </Grid.Column>
@@ -169,13 +140,8 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
         {this.state.diaries.map((diary, pos) => {
           return (
             <Grid.Row key={diary.diaryId}>
-              <Grid.Column width={1} verticalAlign="middle">
-                {/* <Checkbox
-                  onChange={() => this.onDiaryCheck(pos)}
-                  checked={diary.done}
-                /> */}
-              </Grid.Column>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column width={2} verticalAlign="middle"></Grid.Column>
+              <Grid.Column width={9} verticalAlign="middle">
                 {diary.content}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
@@ -199,8 +165,8 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {diary.attachmentUrl && (
-                <Image src={diary.attachmentUrl} size="small" wrapped />
+              {diary.imageUrl && (
+                <Image src={diary.imageUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />

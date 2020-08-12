@@ -1,7 +1,9 @@
 import * as React from 'react'
+import { History } from 'history'
 import { Form, Button, TextArea } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
 import { getUploadUrl, uploadFile } from '../api/diary-api'
+import { createDiary } from '../api/diary-api'
 
 enum UploadState {
   NoUpload,
@@ -9,27 +11,30 @@ enum UploadState {
   UploadingFile
 }
 
-interface EditTodoProps {
+interface EditDiaryProps {
   match: {
     params: {
-      todoId: string
+      diaryId: string
     }
   }
   auth: Auth
+  history: History
 }
 
-interface EditTodoState {
+interface EditDiaryState {
   file: any
   uploadState: UploadState
+  content: string
 }
 
-export class EditTodo extends React.PureComponent<
-  EditTodoProps,
-  EditTodoState
+export class CreateDiary extends React.PureComponent<
+  EditDiaryProps,
+  EditDiaryState
 > {
-  state: EditTodoState = {
+  state: EditDiaryState = {
     file: undefined,
-    uploadState: UploadState.NoUpload
+    uploadState: UploadState.NoUpload,
+    content: ''
   }
 
   handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,25 +50,32 @@ export class EditTodo extends React.PureComponent<
     event.preventDefault()
 
     try {
-      if (!this.state.file) {
-        alert('File should be selected')
-        return
+      let uploadUrl
+      if (this.state.file) {
+        this.setUploadState(UploadState.FetchingPresignedUrl)
+        uploadUrl = await getUploadUrl()
+        this.setUploadState(UploadState.UploadingFile)
+        await uploadFile(uploadUrl.url, this.state.file)
       }
+      // const newDiary = await createDiary(this.props.auth.getIdToken(), {
 
-      this.setUploadState(UploadState.FetchingPresignedUrl)
-      const uploadUrl = await getUploadUrl(
-        this.props.auth.getIdToken(),
-        this.props.match.params.todoId
-      )
-      this.setUploadState(UploadState.UploadingFile)
-      await uploadFile(uploadUrl, this.state.file)
+      const newDiary = await createDiary({
+        content: this.state.content,
+        imageUrl: (() => {
+          return uploadUrl ? uploadUrl.imageUrl : undefined
+        })()
+      })
 
-      alert('File was uploaded!')
+      this.props.history.push('/')
     } catch (e) {
-      alert('Could not upload a file: ' + e.message)
+      alert('error occured: ' + e.message)
     } finally {
       this.setUploadState(UploadState.NoUpload)
     }
+  }
+
+  handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ content: event.target.value })
   }
 
   setUploadState(uploadState: UploadState) {
@@ -91,6 +103,7 @@ export class EditTodo extends React.PureComponent<
             control={TextArea}
             label="Content"
             style={{ minHeight: 300 }}
+            onChange={this.handleContentChange}
           />
 
           {this.renderButton()}

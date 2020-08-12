@@ -14,16 +14,8 @@ const getPromise = jest.fn();
 const createPromise = jest.fn();
 
 const dynamoDbClient: any = {
-  scan: jest.fn(() => {
-    return {
-      promise: getPromise
-    };
-  }),
-  put: jest.fn(() => {
-    return {
-      promise: createPromise
-    };
-  })
+  scan: jest.fn(() => ({ promise: getPromise })),
+  put: jest.fn(() => ({ promise: createPromise }))
 };
 
 const diaryAccess = new DiaryAccess(dynamoDbClient);
@@ -33,9 +25,7 @@ describe('testing dataLayer..', () => {
     getPromise.mockResolvedValue({
       Items: diaries
     });
-
     const result = await diaryAccess.getDiaries();
-
     expect(result).toEqual(diaries);
   });
 
@@ -43,9 +33,7 @@ describe('testing dataLayer..', () => {
     createPromise.mockResolvedValue({
       Item: diaries[0]
     });
-
     const newDiary = await diaryAccess.createDiary({ ...diaries[0] });
-
     expect(newDiary).toEqual(diaries[0]);
   });
 });

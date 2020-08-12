@@ -3,7 +3,7 @@ import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
-import { EditTodo } from './components/CreateDiary'
+import { CreateDiary } from './components/CreateDiary'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import { Diaries } from './components/Diaries'
@@ -98,7 +98,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/newDiary"
           exact
           render={props => {
-            return <EditTodo {...props} auth={this.props.auth} />
+            return <CreateDiary {...props} auth={this.props.auth} />
           }}
         />
 
@@ -106,7 +106,7 @@ export default class App extends Component<AppProps, AppState> {
           path="/diary/:diaryId/edit"
           exact
           render={props => {
-            return <EditTodo {...props} auth={this.props.auth} />
+            return <CreateDiary {...props} auth={this.props.auth} />
           }}
         />
 
