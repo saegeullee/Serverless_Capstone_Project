@@ -50,8 +50,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
 
   onDiaryCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      // const newDiary = await createDiary(this.props.auth.getIdToken(), {
-      const newDiary = await createDiary({
+      const newDiary = await createDiary(this.props.auth.getIdToken(), {
         content: this.state.newDiaryName
       })
       this.setState({
@@ -76,8 +75,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
 
   async componentDidMount() {
     try {
-      // const diaries = await getDiaries(this.props.auth.getIdToken())
-      const diaries = await getDiaries()
+      const diaries = await getDiaries(this.props.auth.getIdToken())
 
       this.setState({
         diaries,
@@ -128,7 +126,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading TODOs
+          Loading Diaries
         </Loader>
       </Grid.Row>
     )

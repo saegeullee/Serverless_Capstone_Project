@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
+import { UpdateDiaryRequest } from '../requests/UpdateDiaryRequest';
 import { Diary } from '../models/Diary';
 
 export class DiaryAccess {
@@ -35,4 +36,6 @@ export class DiaryAccess {
 
     return newDiary;
   }
+
+  // async updateDiary(diaryId: string, updateDiaryRequest: UpdateDiaryRequest) {}
 }

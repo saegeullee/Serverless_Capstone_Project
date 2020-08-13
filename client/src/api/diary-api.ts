@@ -5,20 +5,19 @@ import Axios from 'axios'
 import { UpdateDiaryRequest } from '../types/UpdateDiaryRequest'
 import { UploadUrlReponse } from '../types/UploadUrlReponse'
 
-// export async function getDiaries(idToken: string): Promise<Diary[]> {
-export async function getDiaries(): Promise<Diary[]> {
+export async function getDiaries(idToken: string): Promise<Diary[]> {
   const response = await Axios.get(`${apiEndpoint}/diary`, {
     headers: {
-      'Content-Type': 'application/json'
-      // Authorization: `Bearer ${idToken}`
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`
     }
   })
   console.log('diary:', response.data)
   return response.data.items
 }
 
-// export async function createDiary(idToken: string,newDiary: CreateDiaryRequest): Promise<Diary> {
 export async function createDiary(
+  idToken: string,
   newDiary: CreateDiaryRequest
 ): Promise<Diary> {
   const response = await Axios.post(
@@ -26,8 +25,8 @@ export async function createDiary(
     JSON.stringify(newDiary),
     {
       headers: {
-        'Content-Type': 'application/json'
-        // Authorization: `Bearer ${idToken}`
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`
       }
     }
   )

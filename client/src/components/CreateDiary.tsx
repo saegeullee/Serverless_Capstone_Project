@@ -57,9 +57,8 @@ export class CreateDiary extends React.PureComponent<
         this.setUploadState(UploadState.UploadingFile)
         await uploadFile(uploadUrl.url, this.state.file)
       }
-      // const newDiary = await createDiary(this.props.auth.getIdToken(), {
 
-      const newDiary = await createDiary({
+      const newDiary = await createDiary(this.props.auth.getIdToken(), {
         content: this.state.content,
         imageUrl: (() => {
           return uploadUrl ? uploadUrl.imageUrl : undefined

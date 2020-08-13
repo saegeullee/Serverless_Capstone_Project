@@ -18,7 +18,9 @@ provider:
     DIARY_TABLE: SERVERLESS-DIARY-${self:provider.stage}
     IMAGES_S3_BUCKET: diary-image-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    AUTH_0_SECRET: AUTH_0_SECRET-${self:provider.stage}
+    AUTH_0_SECRET_ID: Auth0-Secret-${self:provider.stage}
+    AUTH_0_SECRET_FIELD: auth0Secret
+
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-2'}
 
@@ -43,6 +45,7 @@ functions:
           method: get
           path: diary
           cors: true
+          authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -56,6 +59,7 @@ functions:
           method: post
           path: diary
           cors: true
+          authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -69,9 +73,21 @@ functions:
           method: get
           path: diary/image
           cors: true
+          authorizer: Auth
 
 resources:
   Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Header: "'Content-Type, X-Amz-Date, Authorization'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+
     DiaryDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -121,7 +137,7 @@ resources:
     Auth0Secret:
       Type: AWS::SecretsManager::Secret
       Properties:
-        Name: ${self:provider.environment.AUTH_0_SECRET}
+        Name: ${self:provider.environment.AUTH_0_SECRET_ID}
         Description: Auth0 Secret
         KmsKeyId: !Ref KMSKey
 
