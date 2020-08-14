@@ -61,6 +61,10 @@ functions:
           path: diary
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          request:
+            schema:
+              application/json: ${file(models/create-diary-request.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -116,6 +120,15 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: 'ApiGatewayRestApi'
+
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
 
     DiaryDynamoDBTable:
       Type: AWS::DynamoDB::Table

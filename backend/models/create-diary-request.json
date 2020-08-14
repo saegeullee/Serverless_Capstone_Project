@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "diary",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "additionalProperties": false
+}
