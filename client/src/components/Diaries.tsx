@@ -41,6 +41,10 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   }
 
   onEditButtonClick = (diaryId: string) => {
+    const currentDiary = this.state.diaries.filter(
+      e => e.diaryId === diaryId
+    )[0]
+    localStorage.setItem('diary', currentDiary.content)
     this.props.history.push(`/diary/${diaryId}/edit`)
   }
 

@@ -3,6 +3,7 @@ import { History } from 'history'
 import { Form, Button, TextArea } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
 import { patchDiary } from '../api/diary-api'
+import { Diary } from '../types/Diary'
 
 enum UploadState {
   NoUpload,
@@ -63,6 +64,13 @@ export class UpdateDiary extends React.PureComponent<
     })
   }
 
+  componentDidMount() {
+    const content = localStorage.getItem('diary')
+    if (content) {
+      this.setState({ content })
+    }
+  }
+
   render() {
     return (
       <div>
@@ -74,6 +82,7 @@ export class UpdateDiary extends React.PureComponent<
             label="Content"
             style={{ minHeight: 300 }}
             onChange={this.handleContentChange}
+            value={this.state.content}
           />
 
           {this.renderButton()}
