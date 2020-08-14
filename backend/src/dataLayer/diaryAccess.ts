@@ -1,8 +1,11 @@
 import * as AWS from 'aws-sdk';
+import * as AWSXray from 'aws-xray-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 import { UpdateDiaryRequest } from '../requests/UpdateDiaryRequest';
 import { Diary } from '../models/Diary';
+
+const XAWS = AWSXray.captureAWS(AWS);
 
 export class DiaryAccess {
   private readonly docClient: DocumentClient;
@@ -79,5 +82,5 @@ function createDynamoDBClient() {
     });
   }
 
-  return new AWS.DynamoDB.DocumentClient();
+  return new XAWS.DynamoDB.DocumentClient();
 }

@@ -9,10 +9,12 @@
   "dependencies": {
     "@types/jest": "^26.0.9",
     "aws-sdk": "^2.731.0",
+    "aws-xray-sdk": "^3.1.0",
     "jest": "^26.3.0",
     "jsonwebtoken": "^8.5.1",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^6.5.0",
+    "serverless-plugin-tracing": "^2.0.0",
     "source-map-support": "^0.5.10",
     "ts-jest": "^26.2.0",
     "uuid": "^8.3.0"

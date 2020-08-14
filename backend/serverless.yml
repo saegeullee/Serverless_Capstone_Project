@@ -9,6 +9,7 @@ custom:
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
 
 provider:
   name: aws
@@ -24,6 +25,17 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-2'}
+
+  tracing:
+    lambda: true
+    apiGateway: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - 'xray:PutTraceSegments'
+          - 'xray:PutTelemetryRecords'
+        Resource:
+          - '*'
 
 functions:
   Auth:
