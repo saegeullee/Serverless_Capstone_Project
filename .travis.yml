@@ -19,9 +19,3 @@ after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push lemix777/capstone-client:latest
   - docker push lemix777/capstone-client:$SHA
-
-deploy:
-  provider: script
-  script: bash ./deploy.sh
-  on:
-    branch: master
