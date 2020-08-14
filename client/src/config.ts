@@ -7,6 +7,6 @@ export const authConfig = {
   // TODO: Create an Auth0 application and copy values from it into this map
   domain: 'dev-k68389gq.us.auth0.com', // Auth0 domain
   clientId: 'VBL1Nvb27GA2hx98GbQBmNusToizgEoh', // Auth0 client id
-  // callbackUrl: 'http://49.247.207.38/callback'
-  callbackUrl: 'http://localhost:3001/callback'
+  callbackUrl: 'http://49.247.207.38/callback'
+  // callbackUrl: 'http://localhost:3001/callback'
 }
