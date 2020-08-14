@@ -93,7 +93,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   render() {
     return (
       <div>
-        <Header as="h1">Today's Diary</Header>
+        <Header as="h1">Your Diary</Header>
 
         {this.renderCreateDiaryInput()}
 
