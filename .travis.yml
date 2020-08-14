@@ -5,7 +5,7 @@ services:
   - docker
 
 before_install:
-  - docker build lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
+  - docker build -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
 
 script:
   - docker run lemix777/backend-test npm run test
