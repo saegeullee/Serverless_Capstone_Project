@@ -1,18 +1,15 @@
-import 'source-map-support/register';
-
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda';
-import { createDiary } from '../../businessLogic/diary';
-import { CreateDiaryRequest } from '../../requests/CreateDiaryRequest';
+import { deleteDiary } from '../../businessLogic/diary';
 import { getUserId } from '../utils';
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  console.log('current event: ', event);
-
+  console.log('event : ', event);
   const userId = getUserId(event);
-  const newDiaryRequest: CreateDiaryRequest = JSON.parse(event.body);
-  const newDiary = await createDiary(userId, newDiaryRequest);
+  const diaryId = event.pathParameters.diaryId;
+
+  await deleteDiary(userId, diaryId);
 
   return {
     statusCode: 200,
@@ -20,7 +17,7 @@ export const handler: APIGatewayProxyHandler = async (
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-      item: newDiary
+      msg: 'deleted successfully'
     })
   };
 };

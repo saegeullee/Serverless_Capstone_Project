@@ -3,7 +3,7 @@ import { Diary } from '../../src/models/Diary';
 
 const diaries: Diary[] = [
   {
-    // userId: 'user-id',
+    userId: 'user-id',
     diaryId: 'diary-id',
     createdAt: '2020-08-15',
     content: 'diary content'
@@ -14,7 +14,7 @@ const getPromise = jest.fn();
 const createPromise = jest.fn();
 
 const dynamoDbClient: any = {
-  scan: jest.fn(() => ({ promise: getPromise })),
+  query: jest.fn(() => ({ promise: getPromise })),
   put: jest.fn(() => ({ promise: createPromise }))
 };
 
@@ -25,7 +25,7 @@ describe('testing dataLayer..', () => {
     getPromise.mockResolvedValue({
       Items: diaries
     });
-    const result = await diaryAccess.getDiaries();
+    const result = await diaryAccess.getDiaries('user-id');
     expect(result).toEqual(diaries);
   });
 

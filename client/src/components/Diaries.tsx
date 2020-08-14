@@ -41,7 +41,7 @@ export class Diaries extends React.PureComponent<DiariesProps, DiariesState> {
   }
 
   onEditButtonClick = (diaryId: string) => {
-    this.props.history.push(`/diaries/${diaryId}/edit`)
+    this.props.history.push(`/diary/${diaryId}/edit`)
   }
 
   onNewDiaryButtonClick = () => {

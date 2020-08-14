@@ -13,6 +13,7 @@ let cachedSecret;
 
 export const handler = async (event: CustomAuthorizerEvent): Promise<CustomAuthorizerResult> => {
   try {
+    console.log(event.authorizationToken);
     const jwtToken = await verifyToken(event.authorizationToken);
 
     return {
@@ -54,7 +55,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 }
 
 async function getSecret() {
-  if (cachedSecret) return cachedSecret;
+  // if (cachedSecret) return cachedSecret;
 
   const data = await secretManagerClient
     .getSecretValue({

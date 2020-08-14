@@ -15,11 +15,12 @@ provider:
   runtime: nodejs12.x
 
   environment:
-    DIARY_TABLE: SERVERLESS-DIARY-${self:provider.stage}
+    DIARY_TABLE: DIARY-${self:provider.stage}
     IMAGES_S3_BUCKET: diary-image-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_SECRET_ID: Auth0-Secret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: auth0Secret
+    DIARY_ID_INDEX: diaryIdIndex
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-2'}
@@ -49,7 +50,7 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:Scan
+          - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
 
   CreateDiary:
@@ -64,6 +65,34 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
+
+  UpdateDiary:
+    handler: src/lambda/http/updateDiary.handler
+    events:
+      - http:
+          method: patch
+          path: diary/{diaryId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
+
+  DeleteDiary:
+    handler: src/lambda/http/deleteDiary.handler
+    events:
+      - http:
+          method: delete
+          path: diary/{diaryId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DIARY_TABLE}
 
   UploadUrl:
@@ -92,11 +121,22 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
           - AttributeName: diaryId
             AttributeType: S
         KeySchema:
-          - AttributeName: diaryId
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: diaryId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.DIARY_ID_INDEX}
+            KeySchema:
+              - AttributeName: diaryId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.DIARY_TABLE}
 

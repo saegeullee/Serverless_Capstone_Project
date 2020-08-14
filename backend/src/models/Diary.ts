@@ -1,5 +1,5 @@
 export interface Diary {
-  // userId: string,
+  userId: string;
   diaryId: string;
   createdAt: string;
   content: string;

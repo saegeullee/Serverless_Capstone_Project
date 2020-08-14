@@ -62,11 +62,11 @@ export async function deleteDiary(
   })
 }
 
-export async function getUploadUrl(): Promise<UploadUrlReponse> {
+export async function getUploadUrl(idToken: string): Promise<UploadUrlReponse> {
   const response = await Axios.get(`${apiEndpoint}/diary/image`, {
     headers: {
-      'Content-Type': 'application/json'
-      // Authorization: `Bearer ${idToken}`
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`
     }
   })
   return response.data.item

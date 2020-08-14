@@ -13,13 +13,17 @@ export class DiaryAccess {
       this.docClient = dynamoDbClient;
       return;
     }
-    this.docClient = new AWS.DynamoDB.DocumentClient();
+    this.docClient = createDynamoDBClient();
   }
 
-  async getDiaries(): Promise<Diary[]> {
+  async getDiaries(userId: string): Promise<Diary[]> {
     const result = await this.docClient
-      .scan({
-        TableName: this.diaryTable
+      .query({
+        TableName: this.diaryTable,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+          ':userId': userId
+        }
       })
       .promise();
 
@@ -37,5 +41,43 @@ export class DiaryAccess {
     return newDiary;
   }
 
-  // async updateDiary(diaryId: string, updateDiaryRequest: UpdateDiaryRequest) {}
+  async updateDiary(userId: string, diaryId: string, updateDiary: UpdateDiaryRequest) {
+    await this.docClient
+      .update({
+        TableName: this.diaryTable,
+        Key: {
+          userId,
+          diaryId
+        },
+        UpdateExpression: 'set content= :content',
+        ExpressionAttributeValues: {
+          ':content': updateDiary.content
+        }
+      })
+      .promise();
+  }
+
+  async deleteDiary(userId: string, diaryId: string) {
+    await this.docClient
+      .delete({
+        TableName: this.diaryTable,
+        Key: {
+          userId,
+          diaryId
+        }
+      })
+      .promise();
+  }
+}
+
+function createDynamoDBClient() {
+  if (process.env.IS_OFFLINE) {
+    console.log('Creating a local DynamoDB instance');
+    return new AWS.DynamoDB.DocumentClient({
+      region: 'localhost',
+      endpoint: 'http://localhost:8000'
+    });
+  }
+
+  return new AWS.DynamoDB.DocumentClient();
 }
