@@ -9,3 +9,8 @@ before_install:
 
 script:
   - docker run lemix777/backend-test npm run test
+
+after_success:
+  - docker build -t lemix777/capstone-client ./client
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push lemix777/capstone-client
