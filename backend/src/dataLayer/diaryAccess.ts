@@ -4,6 +4,7 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 import { UpdateDiaryRequest } from '../requests/UpdateDiaryRequest';
 import { Diary } from '../models/Diary';
+import { logger } from '../logger/looger';
 
 const XAWS = AWSXray.captureAWS(AWS);
 
@@ -74,6 +75,8 @@ export class DiaryAccess {
 }
 
 function createDynamoDBClient() {
+  logger.info('Creating DynamoDB Client..');
+
   if (process.env.IS_OFFLINE) {
     console.log('Creating a local DynamoDB instance');
     return new AWS.DynamoDB.DocumentClient({
