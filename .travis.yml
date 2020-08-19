@@ -8,13 +8,7 @@ env:
   global:
     - SHA=$(git rev-parse HEAD)
 
-before_install:
-  - docker build -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
-
 script:
-  - docker run lemix777/backend-test npm run test
-
-after_success:
   - docker build -t lemix777/capstone-client:latest -t lemix777/capstone-client:$SHA ./client
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push lemix777/capstone-client:latest
