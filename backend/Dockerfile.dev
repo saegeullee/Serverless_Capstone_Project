@@ -2,4 +2,7 @@ FROM node:alpine
 WORKDIR "/app"
 COPY ./package.json .
 RUN npm install
+RUN npm install serverless -g
+RUN sls dynamodb install
+RUN sls dynamodb start --seed=diaries
 COPY . .
