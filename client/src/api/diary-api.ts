@@ -12,7 +12,6 @@ export async function getDiaries(idToken: string): Promise<Diary[]> {
       Authorization: `Bearer ${idToken}`
     }
   })
-  console.log('diary:', response.data)
   return response.data.items
 }
 
