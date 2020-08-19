@@ -5,11 +5,29 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  serverless-offline:
+    httpPort: 3003
+
+  dynamodb:
+    start:
+      port: 8001
+      inMemory: true
+      migrate: true
+    stages:
+      - dev
+
+    seed:
+      diaries:
+        sources:
+          - table: ${self:provider.environment.DIARY_TABLE}
+            sources: [./seed/diaries.json]
 
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
+  - serverless-dynamodb-local
+  - serverless-offline
 
 provider:
   name: aws
@@ -22,6 +40,7 @@ provider:
     AUTH_0_SECRET_ID: Auth0-Secret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: auth0Secret
     DIARY_ID_INDEX: diaryIdIndex
+    AWS_XRAY_SDK_ENABLED: false
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-2'}

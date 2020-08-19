@@ -1,0 +1,23 @@
+[
+  {
+    "userId": "user-id",
+    "diaryId": "1",
+    "content": "content1",
+    "imageUrl": "imageUrl",
+    "createdAt": "2020-08-19"
+  },
+  {
+    "userId": "user-id",
+    "diaryId": "2",
+    "content": "content2",
+    "imageUrl": "imageUrl",
+    "createdAt": "2020-08-19"
+  },
+  {
+    "userId": "user-id",
+    "diaryId": "3",
+    "content": "content3",
+    "imageUrl": "imageUrl",
+    "createdAt": "2020-08-19"
+  }
+]

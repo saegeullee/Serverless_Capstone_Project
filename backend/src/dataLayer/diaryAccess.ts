@@ -1,22 +1,17 @@
 import * as AWS from 'aws-sdk';
-import * as AWSXray from 'aws-xray-sdk';
+// import * as AWSXray from 'aws-xray-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 import { UpdateDiaryRequest } from '../requests/UpdateDiaryRequest';
 import { Diary } from '../models/Diary';
 import { logger } from '../logger/looger';
 
-const XAWS = AWSXray.captureAWS(AWS);
-
 export class DiaryAccess {
   private readonly docClient: DocumentClient;
   private readonly diaryTable: string;
-  constructor(dynamoDbClient?: any) {
+  constructor(tableName?: any) {
     this.diaryTable = process.env.DIARY_TABLE;
-    if (dynamoDbClient) {
-      this.docClient = dynamoDbClient;
-      return;
-    }
+    if (tableName) this.diaryTable = tableName;
     this.docClient = createDynamoDBClient();
   }
 
@@ -81,9 +76,10 @@ function createDynamoDBClient() {
     console.log('Creating a local DynamoDB instance');
     return new AWS.DynamoDB.DocumentClient({
       region: 'localhost',
-      endpoint: 'http://localhost:8000'
+      endpoint: 'http://localhost:8001'
     });
   }
-
-  return new XAWS.DynamoDB.DocumentClient();
+  // const XAWS = AWSXray.captureAWS(AWS);
+  // return new XAWS.DynamoDB.DocumentClient();
+  return new AWS.DynamoDB.DocumentClient();
 }

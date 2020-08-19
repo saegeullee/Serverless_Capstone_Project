@@ -1,23 +1,23 @@
+import 'source-map-support/register';
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda';
-import { deleteDiary } from '../../businessLogic/diary';
+
+import DiaryBusinessLogicInstanceGetter from '../../businessLogic/diary';
+import { Responses } from '../../common/API_Responses';
 import { getUserId } from '../utils';
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  console.log('event : ', event);
+  // console.log('event : ', event);
+
+  if (!event.headers.Authorization) {
+    return Responses._400({ message: 'Authorization header empty' });
+  }
+
   const userId = getUserId(event);
   const diaryId = event.pathParameters.diaryId;
 
-  await deleteDiary(userId, diaryId);
+  await DiaryBusinessLogicInstanceGetter().deleteDiary(userId, diaryId);
 
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify({
-      msg: 'deleted successfully'
-    })
-  };
+  return Responses._200({ message: 'deleted successfully' });
 };

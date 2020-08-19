@@ -10,30 +10,20 @@ const diaries: Diary[] = [
   }
 ];
 
-const getPromise = jest.fn();
-const createPromise = jest.fn();
-
-const dynamoDbClient: any = {
-  query: jest.fn(() => ({ promise: getPromise })),
-  put: jest.fn(() => ({ promise: createPromise }))
-};
-
-const diaryAccess = new DiaryAccess(dynamoDbClient);
+const diaryAccess = new DiaryAccess('DIARY-dev');
 
 describe('testing dataLayer..', () => {
-  it('should return a diaries', async () => {
-    getPromise.mockResolvedValue({
-      Items: diaries
-    });
-    const result = await diaryAccess.getDiaries('user-id');
-    expect(result).toEqual(diaries);
-  });
-
   it('should create new diary', async () => {
-    createPromise.mockResolvedValue({
-      Item: diaries[0]
-    });
     const newDiary = await diaryAccess.createDiary({ ...diaries[0] });
     expect(newDiary).toEqual(diaries[0]);
+  });
+
+  it('should return a diaries', async () => {
+    const result = await diaryAccess.getDiaries('user-id');
+    expect(Array.isArray(result)).toBe(true);
+    expect(result[0].userId).toBe('user-id');
+    expect(result[0]).toHaveProperty('content');
+    expect(result[0]).toHaveProperty('diaryId');
+    expect(result[0]).toHaveProperty('userId');
   });
 });
