@@ -40,7 +40,6 @@ To run backend unit test and integration test, run the following commands:
 
 ```
 sls dynamodb install
-sls dynamodb start
 sls dynamodb start --seed=diaries
 npm run test
 ```
