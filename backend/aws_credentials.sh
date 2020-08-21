@@ -10,3 +10,5 @@ cat > ~/.aws/config << EOL
 [default]
 region=ap-northeast-2
 EOL
+
+set AWS_SDK_LOAD_CONFIG=1
