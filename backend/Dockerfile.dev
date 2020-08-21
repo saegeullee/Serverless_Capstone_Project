@@ -3,4 +3,5 @@ WORKDIR "/app"
 COPY ./package.json .
 RUN npm install
 COPY . .
+RUN chmod +x ./aws_credentials.sh
 RUN ./aws_credentials.sh
