@@ -6,8 +6,6 @@ import { UpdateDiaryRequest } from '../requests/UpdateDiaryRequest';
 import { Diary } from '../models/Diary';
 import { logger } from '../logger/looger';
 
-AWS.config.update({ region: 'ap-northeast-2' });
-
 export class DiaryAccess {
   private readonly docClient: DocumentClient;
   private readonly diaryTable: string;
