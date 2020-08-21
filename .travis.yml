@@ -12,6 +12,7 @@ before_install:
   - docker build --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY --build-arg AWS_SECRET_KEY=$AWS_SECRET_KEY -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
 
 script:
+  - docker run lemix777/backend-test sls deploy -v --stage dev
   - docker run lemix777/backend-test npm run test
 
 after_success:
