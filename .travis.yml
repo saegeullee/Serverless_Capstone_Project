@@ -11,7 +11,7 @@ env:
 before_install:
   - npm install -g serverless
   - sls config credentials --provider aws --key "$AWS_ACCESS_KEY" --secret "$AWS_SECRET_KEY" --profile serverless-dev
-  - docker build --build-arg AWS_ACCESS_KEY={$AWS_ACCESS_KEY} --build-arg AWS_SECRET_KEY={$AWS_SECRET_KEY} -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
+  - docker build --build-arg AWS_ACCESS_KEY=$AWS_ACCESS_KEY --build-arg AWS_SECRET_KEY=$AWS_SECRET_KEY -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
 
 script:
   - docker run lemix777/backend-test npm run test
