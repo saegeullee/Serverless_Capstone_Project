@@ -12,11 +12,9 @@ before_install:
   - npm install -g serverless
   - sls config credentials --provider aws --key "$AWS_ACCESS_KEY" --secret "$AWS_SECRET_KEY" --profile serverless-dev
   - docker build -t lemix777/backend-test -f ./backend/Dockerfile.dev ./backend
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push lemix777/backend-test
 
 script:
-  - docker run -e AWS_ACCESS_KEY="$AWS_ACCESS_KEY" -e AWS_SECRET_KEY="$AWS_SECRET_KEY" lemix777/backend-test npm run test
+  - docker run -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY lemix777/backend-test npm run test
 
 after_success:
   - docker build -t lemix777/capstone-client:latest -t lemix777/capstone-client:$SHA ./client
