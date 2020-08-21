@@ -34,7 +34,7 @@ npm install
 sls deploy -v
 ```
 
-## Backend Local testing
+### Backend Local testing
 
 To run backend unit test and integration test, run the following commands:
 
