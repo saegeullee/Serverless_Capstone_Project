@@ -9,3 +9,5 @@ ARG AWS_SECRET_KEY
 ENV AWS_SECRET_KEY ${AWS_SECRET_KEY}
 RUN chmod +x ./aws_credentials.sh
 RUN ./aws_credentials.sh
+RUN npm install -g serverless
+RUN sls config credentials --provider aws --key {$AWS_ACCESS_KEY} --secret {AWS_SECRET_KEY} --profile serverless-dev
