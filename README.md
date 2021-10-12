@@ -1,3 +1,5 @@
+# 현재 서버 비용문제로 이 프로젝트는 라이브되어 있지 않습니다.
+
 # Serverless Diaries
 
 ## Functionality of the application
